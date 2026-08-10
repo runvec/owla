@@ -7,7 +7,17 @@ import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 // Em produção, o AUTH_SECRET é obrigatório. Sem ele, os tokens JWT seriam
 // assinados com um valor inseguro/aleatório a cada restart, invalidando
 // sessões e abrindo brecha de segurança. Falhamos cedo em vez de rodar frágil.
-if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
+//
+// Durante o `next build` o módulo é avaliado com NODE_ENV=production (coleta
+// de dados de página), mas o secret só é necessário em runtime. Detectamos a
+// fase de build via NEXT_PHASE para não quebrar a compilação; em produção real
+// (next start / Vercel) a validação continua ativa.
+const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+if (
+  process.env.NODE_ENV === "production" &&
+  !isBuildPhase &&
+  !process.env.AUTH_SECRET
+) {
   throw new Error(
     "AUTH_SECRET é obrigatório em produção. Defina um valor forte (ex: openssl rand -base64 32).",
   );
