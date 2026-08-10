@@ -73,6 +73,7 @@ export async function POST(req: Request): Promise<Response> {
     await grantSignup(user.id);
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (e) {
+    console.error("[register] falha ao criar conta:", e);
     return NextResponse.json({ error: msg(e) }, { status: 500 });
   }
 }

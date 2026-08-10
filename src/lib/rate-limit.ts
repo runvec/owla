@@ -9,6 +9,12 @@ import { prisma } from "@/lib/prisma";
  * corrida entre requisições concorrentes.
  *
  * Retorna { ok: true } se permitido; caso contrário { ok: false, retryAfterMs }.
+ *
+ * Falha em aberto: se o banco estiver indisponível (ou a tabela ausente), o
+ * limitador não pode derrubar a rota inteira com um 500 sem corpo — todos os
+ * chamadores o invocam antes do seu próprio try/catch. Como toda operação
+ * limitada escreve no mesmo Postgres, um banco fora do ar já barra o abuso
+ * pela via natural; o erro é registrado para aparecer nos logs.
  */
 export async function rateLimit(
   key: string,
@@ -18,30 +24,35 @@ export async function rateLimit(
   const now = new Date();
   const resetAt = new Date(now.getTime() + windowMs);
 
-  // Incrementa o contador apenas se a janela ainda não expirou. Na primeira
-  // chamada (ou após expirar) o upsert cria/reseta a linha com count: 1 — o
-  // incremento em seguida só existe para a janela já válida.
-  const updated = await prisma.rateLimit.updateMany({
-    where: { key, resetAt: { gt: now } },
-    data: { count: { increment: 1 } },
-  });
-
-  if (updated.count === 0) {
-    await prisma.rateLimit.upsert({
-      where: { key },
-      create: { key, count: 1, resetAt },
-      update: { count: 1, resetAt },
+  try {
+    // Incrementa o contador apenas se a janela ainda não expirou. Na primeira
+    // chamada (ou após expirar) o upsert cria/reseta a linha com count: 1 — o
+    // incremento em seguida só existe para a janela já válida.
+    const updated = await prisma.rateLimit.updateMany({
+      where: { key, resetAt: { gt: now } },
+      data: { count: { increment: 1 } },
     });
+
+    if (updated.count === 0) {
+      await prisma.rateLimit.upsert({
+        where: { key },
+        create: { key, count: 1, resetAt },
+        update: { count: 1, resetAt },
+      });
+    }
+
+    const row = await prisma.rateLimit.findUnique({ where: { key } });
+    if (!row) return { ok: true };
+
+    if (row.count > limit) {
+      return { ok: false, retryAfterMs: Math.max(0, row.resetAt.getTime() - now.getTime()) };
+    }
+
+    return { ok: true };
+  } catch (e) {
+    console.error(`[rate-limit] falha ao aplicar limite "${key}":`, e);
+    return { ok: true };
   }
-
-  const row = await prisma.rateLimit.findUnique({ where: { key } });
-  if (!row) return { ok: true };
-
-  if (row.count > limit) {
-    return { ok: false, retryAfterMs: Math.max(0, row.resetAt.getTime() - now.getTime()) };
-  }
-
-  return { ok: true };
 }
 
 export const RATE_LIMITS = {
