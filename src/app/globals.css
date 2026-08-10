@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  /* Owla brand palette (docs/new_visual.png) */
+  --color-indigo-profundo: #1e2e8a;
+  --color-owla: #3555d8;
+  --color-owla-dark: #2a44b8;
+  --color-signal: #19c8a3;
+  --color-market-amber: #ffb457;
+  --color-mist: #e8ebff;
+  --color-cloud: #f7f8fc;
+  --color-ink: #141a26;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: #f7f8fc; /* Nuvem */
+  color: #141a26; /* Tinta */
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d5dafc; /* mist, darkened */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b6bff5;
+}

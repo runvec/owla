@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: owla-db
+    environment:
+      POSTGRES_USER: owla
+      POSTGRES_PASSWORD: owla
+      POSTGRES_DB: owla
+    ports:
+      - "5432:5432"
+    volumes:
+      - owla-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U owla -d owla"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  owla-pgdata:

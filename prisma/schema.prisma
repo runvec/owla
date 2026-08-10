@@ -1,0 +1,237 @@
+// Owla — plataforma de entretenimento, pontos sem valor monetário.
+// Schema: ver docs/ENGINE.md (motor de casamento) e docs/PLAN.md (modelo).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  SIGNUP_GRANT
+  DAILY_BONUS
+  ORDER_ESCROW
+  ORDER_RELEASE
+  TRADE_SETTLE
+  RESOLUTION_PAYOUT
+  ADMIN_ADJUST
+}
+
+enum EventStatus {
+  OPEN
+  CLOSED
+}
+
+enum MarketStatus {
+  OPEN
+  CLOSED
+  RESOLVED_YES
+  RESOLVED_NO
+  VOID
+}
+
+enum OrderSide {
+  YES
+  NO
+}
+
+enum OrderDirection {
+  BUY
+  SELL
+}
+
+enum OrderType {
+  GTC
+  FAK
+}
+
+enum OrderStatus {
+  OPEN
+  PARTIAL
+  FILLED
+  CANCELED
+}
+
+enum TradeKind {
+  MINT
+  MERGE
+  TRANSFER
+}
+
+enum ProposalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(USER)
+  balance      Int      @default(0)
+  escrow       Int      @default(0)
+  totalGranted Int      @default(0)
+  lastBonusAt  DateTime?
+  createdAt    DateTime @default(now())
+
+  transactions PointsTransaction[]
+  orders       Order[]
+  positions    Position[]
+  tradesAsTaker Trade[] @relation("TakerTrades")
+  tradesAsMaker Trade[] @relation("MakerTrades")
+  comments     Comment[]
+  proposals    MarketProposal[]
+}
+
+model PointsTransaction {
+  id        String          @id @default(cuid())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  amount    Int
+  type      TransactionType
+  refId     String?
+  createdAt DateTime        @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  title       String
+  description String?
+  category    String
+  imageUrl    String?
+  endsAt      DateTime
+  status      EventStatus @default(OPEN)
+  createdAt   DateTime    @default(now())
+
+  markets  Market[]
+  comments Comment[]
+}
+
+model Market {
+  id         String       @id @default(cuid())
+  eventId    String
+  event      Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  question   String
+  rulesText  String?
+  status     MarketStatus @default(OPEN)
+  lastPrice  Int          @default(50)
+  volume     Int          @default(0)
+  pairs      Int          @default(0)
+  createdAt  DateTime     @default(now())
+
+  orders      Order[]
+  positions   Position[]
+  trades      Trade[]
+  pricePoints PricePoint[]
+  proposals   MarketProposal[]
+
+  @@index([eventId])
+}
+
+model Order {
+  id         String        @id @default(cuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
+  marketId   String
+  market     Market        @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  side       OrderSide
+  direction  OrderDirection
+  priceCents Int
+  qty        Int
+  filledQty  Int           @default(0)
+  type       OrderType     @default(GTC)
+  status     OrderStatus   @default(OPEN)
+  createdAt  DateTime      @default(now())
+
+  @@index([marketId, status])
+  @@index([userId, status])
+}
+
+model Position {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  marketId    String
+  market      Market    @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  side        OrderSide
+  qty         Int       @default(0)
+  avgCostCents Int      @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, marketId, side])
+}
+
+model Trade {
+  id         String    @id @default(cuid())
+  marketId   String
+  market     Market    @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  priceCents Int
+  qty        Int
+  takerId    String
+  taker      User      @relation("TakerTrades", fields: [takerId], references: [id])
+  makerId    String
+  maker      User      @relation("MakerTrades", fields: [makerId], references: [id])
+  kind       TradeKind
+  createdAt  DateTime  @default(now())
+
+  @@index([marketId, createdAt])
+}
+
+model PricePoint {
+  id         String   @id @default(cuid())
+  marketId   String
+  market     Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  priceCents Int
+  ts         DateTime @default(now())
+
+  @@index([marketId, ts])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([eventId, createdAt])
+}
+
+model MarketProposal {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+  question  String
+  context   String?
+  category  String
+  status    ProposalStatus @default(PENDING)
+  adminNote String?
+  marketId  String?
+  market    Market?        @relation(fields: [marketId], references: [id])
+  createdAt DateTime       @default(now())
+
+  @@index([userId])
+  @@index([status])
+}
+model RateLimit {
+  key       String   @id
+  count     Int
+  resetAt   DateTime
+  updatedAt DateTime @updatedAt
+}
