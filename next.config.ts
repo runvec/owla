@@ -23,7 +23,13 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  output: "standalone",
+  // `output: "standalone"` é necessário para o Docker (ver Dockerfile, que
+  // copia `.next/standalone` e roda `server.js`). No Vercel, porém, o standalone
+  // quebra o deploy: o build espera `.next/next-server.js.nft.json` na raiz de
+  // `.next/`, que não existe quando standalone está ativo. O Vercel define
+  // `VERCEL=1`; nesse caso desativamos o standalone e o Vercel faz o deploy
+  // otimizado padrão.
+  output: process.env.VERCEL === "1" ? undefined : "standalone",
   poweredByHeader: false,
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
