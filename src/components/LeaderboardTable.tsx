@@ -60,8 +60,8 @@ export default function LeaderboardTable() {
         <div className="flex gap-1 rounded-lg bg-mist p-1">
           {(
             [
-              { id: "profit", label: "Ranking de lucro" },
-              { id: "volume", label: "Ranking de volume" },
+              { id: "profit", label: "Desempenho" },
+              { id: "volume", label: "Participação" },
             ] as const
           ).map((t) => (
             <button
@@ -109,7 +109,7 @@ export default function LeaderboardTable() {
                 <th className="px-4 py-3 font-medium">#</th>
                 <th className="px-4 py-3 font-medium">Usuário</th>
                 <th className="px-4 py-3 text-right font-medium">
-                  {metric === "profit" ? "Lucro" : "Volume"}
+                  {metric === "profit" ? "Desempenho" : "Participação"}
                 </th>
               </tr>
             </thead>

@@ -40,9 +40,9 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
         </div>
         <div className="space-y-3 opacity-60">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink/80">Pergunta (SIM/NÃO)</label>
+            <label className="mb-1.5 block text-sm font-medium text-ink/80">Pergunta (A favor/Contra)</label>
             <textarea
-              value="(bloqueado — você ainda não atingiu o requisito para propor mercados)"
+              value="(bloqueado — você ainda não atingiu o requisito para sugerir perguntas)"
               readOnly
               rows={3}
               maxLength={200}
@@ -66,7 +66,7 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
           </div>
         </div>
         <button type="submit" disabled className="w-full cursor-not-allowed rounded-lg bg-mist px-4 py-2.5 text-sm font-semibold text-ink/50">
-          Proposta bloqueada
+          Sugestão bloqueada
         </button>
       </div>
     );
@@ -88,7 +88,7 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(body.error || "Não foi possível enviar a proposta.");
+        setError(body.error || "Não foi possível enviar a sugestão.");
         return;
       }
       setDone(true);
@@ -102,14 +102,14 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
   if (done) {
     return (
       <div className="rounded-xl border border-signal/30 bg-signal/5 p-6 text-sm text-ink">
-        <p className="text-base font-semibold text-signal">Proposta enviada!</p>
+        <p className="text-base font-semibold text-signal">Sugestão enviada!</p>
         <p className="mt-1 text-ink/60">Status: aguardando revisão do administrador.</p>
         <div className="mt-4 flex flex-wrap gap-3">
           <Link
             href="/proposals"
             className="rounded-lg bg-owla px-4 py-2 text-sm font-semibold text-white hover:bg-owla-dark"
           >
-            Ver minhas propostas
+            Ver minhas sugestões
           </Link>
           <button
             type="button"
@@ -120,7 +120,7 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
             }}
             className="rounded-lg border border-mist px-4 py-2 text-sm font-medium text-ink/70 hover:border-owla hover:text-owla"
           >
-            Fazer outra proposta
+            Fazer outra sugestão
           </button>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
     <form onSubmit={submit} className="space-y-4 rounded-xl border border-mist bg-white p-6 shadow-sm">
       <div>
         <label htmlFor="question" className="mb-1.5 block text-sm font-medium text-ink/80">
-          Pergunta (SIM/NÃO)
+          Pergunta (A favor/Contra)
         </label>
         <textarea
           id="question"
@@ -189,7 +189,7 @@ export default function ProposalForm({ categories, disabled = false, lockMessage
         disabled={submitting}
         className="w-full rounded-lg bg-owla px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-owla-dark disabled:opacity-50"
       >
-        {submitting ? "Enviando…" : "Enviar proposta"}
+        {submitting ? "Enviando…" : "Enviar sugestão"}
       </button>
     </form>
   );

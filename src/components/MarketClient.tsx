@@ -8,6 +8,7 @@ import TradeWidget from "@/components/TradeWidget";
 import MyOrders from "@/components/MyOrders";
 import PositionSummary from "@/components/PositionSummary";
 import { pct, fmtN, fmtPts, timeAgo, MARKET_STATUS_LABEL } from "@/lib/format";
+import { TRADE_KIND_LABEL } from "@/lib/product-language";
 
 export type MarketStatus = "OPEN" | "CLOSED" | "RESOLVED_YES" | "RESOLVED_NO" | "VOID";
 export type Side = "YES" | "NO";
@@ -90,12 +91,6 @@ const fetcher = async (url: string) => {
   return json as MarketSnapshot;
 };
 
-const KIND_LABEL: Record<string, string> = {
-  MINT: "Criado",
-  MERGE: "Fundido",
-  TRANSFER: "Transferência",
-};
-
 export default function MarketClient({
   initial,
   marketId,
@@ -120,13 +115,13 @@ export default function MarketClient({
 
   const banner: { text: string; className: string } | null =
     market.status === "RESOLVED_YES"
-      ? { text: "Mercado resolvido: SIM — cada cota YES valeu 100 pts.", className: "border-signal/40 bg-signal/10 text-signal" }
+      ? { text: "Resultado: A favor — cada unidade A favor valeu 100 pts.", className: "border-signal/40 bg-signal/10 text-signal" }
       : market.status === "RESOLVED_NO"
-        ? { text: "Mercado resolvido: NÃO — cada cota NO valeu 100 pts.", className: "border-rose-300 bg-rose-50 text-rose-600" }
+        ? { text: "Resultado: Contra — cada unidade Contra valeu 100 pts.", className: "border-rose-300 bg-rose-50 text-rose-600" }
         : market.status === "VOID"
-          ? { text: "Mercado anulado — cada cota valeu 50 pts.", className: "border-market-amber/50 bg-market-amber/15 text-ink" }
+          ? { text: "Pergunta anulada — cada unidade valeu 50 pts.", className: "border-market-amber/50 bg-market-amber/15 text-ink" }
           : market.status === "CLOSED"
-            ? { text: "Negociação encerrada — aguardando resolução.", className: "border-market-amber/50 bg-market-amber/15 text-ink" }
+            ? { text: "Palpites encerrados — aguardando definição do resultado.", className: "border-market-amber/50 bg-market-amber/15 text-ink" }
             : null;
 
   return (
@@ -146,10 +141,10 @@ export default function MarketClient({
         <h1 className="text-2xl font-semibold leading-tight">{market.question}</h1>
         <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink/50">
           <span>
-            Preço <strong className="text-ink">{pct(market.lastPrice)}</strong>
+            Chance <strong className="text-ink">{pct(market.lastPrice)}</strong>
           </span>
-          <span>Volume {fmtPts(market.volume)}</span>
-          <span>Pares em circulação {fmtN(market.pairs)}</span>
+          <span>Participação {fmtPts(market.volume)}</span>
+          <span>Pares ativos {fmtN(market.pairs)}</span>
         </div>
         {market.rulesText && <p className="text-sm text-ink/60">{market.rulesText}</p>}
       </header>
@@ -175,20 +170,20 @@ export default function MarketClient({
 
       <section className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-ink/70">Negociações recentes</h2>
+          <h2 className="text-sm font-semibold text-ink/70">Palpites confirmados</h2>
           {error && <span className="text-xs text-rose-600">Falha ao atualizar</span>}
         </div>
         {snap.trades.length === 0 ? (
-          <p className="text-sm text-ink/50">Ainda não há negociações neste mercado.</p>
+          <p className="text-sm text-ink/50">Ainda não há palpites confirmados nesta pergunta.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-ink/50">
-                  <th className="pb-2 font-medium">Preço</th>
-                  <th className="pb-2 font-medium">Qtd</th>
+                  <th className="pb-2 font-medium">Chance</th>
+                  <th className="pb-2 font-medium">Unidades</th>
                   <th className="pb-2 font-medium">Tipo</th>
-                  <th className="pb-2 font-medium">Comprador</th>
+                  <th className="pb-2 font-medium">Participante</th>
                   <th className="pb-2 text-right font-medium">Quando</th>
                 </tr>
               </thead>
@@ -197,7 +192,7 @@ export default function MarketClient({
                   <tr key={t.id}>
                     <td className="py-1.5 font-medium text-ink">{pct(t.priceCents)}</td>
                     <td className="py-1.5 text-ink/50">{fmtN(t.qty)}</td>
-                    <td className="py-1.5 text-ink/50">{KIND_LABEL[t.kind] ?? t.kind}</td>
+                    <td className="py-1.5 text-ink/50">{TRADE_KIND_LABEL[t.kind] ?? t.kind}</td>
                     <td className="py-1.5 text-ink/50">{t.takerName ?? "—"}</td>
                     <td className="py-1.5 text-right text-ink/50">{timeAgo(t.createdAt)}</td>
                   </tr>

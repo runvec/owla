@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { pct, fmtN, timeAgo } from "@/lib/format";
+import { DIRECTION_LABEL, ORDER_STATUS_LABEL, ORDER_TYPE_LABEL, SIDE_LABEL } from "@/lib/product-language";
 
 export interface OrderRow {
   id: string;
@@ -20,9 +21,6 @@ interface Props {
   onChanged: () => void;
 }
 
-const DIRECTION_LABEL: Record<string, string> = { BUY: "Compra", SELL: "Venda" };
-const STATUS_LABEL: Record<string, string> = { OPEN: "Aberta", PARTIAL: "Parcial" };
-
 export default function MyOrders({ orders, onChanged }: Props) {
   const [cancelingId, setCancelingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -30,8 +28,8 @@ export default function MyOrders({ orders, onChanged }: Props) {
   if (!orders || orders.length === 0) {
     return (
       <div className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
-        <h2 className="mb-2 text-sm font-semibold text-ink/70">Minhas ordens</h2>
-        <p className="text-sm text-ink/50">Você não tem ordens abertas.</p>
+        <h2 className="mb-2 text-sm font-semibold text-ink/70">Meus palpites pendentes</h2>
+        <p className="text-sm text-ink/50">Você não tem palpites aguardando confirmação.</p>
       </div>
     );
   }
@@ -53,7 +51,7 @@ export default function MyOrders({ orders, onChanged }: Props) {
 
   return (
     <div className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
-      <h2 className="mb-2 text-sm font-semibold text-ink/70">Minhas ordens</h2>
+      <h2 className="mb-2 text-sm font-semibold text-ink/70">Meus palpites pendentes</h2>
       <ul className="space-y-2">
         {orders.map((o) => (
           <li
@@ -63,15 +61,15 @@ export default function MyOrders({ orders, onChanged }: Props) {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className={o.side === "YES" ? "font-medium text-signal" : "font-medium text-rose-600"}>
-                  {o.side}
+                  {SIDE_LABEL[o.side]}
                 </span>
                 <span className="font-medium text-ink/80">
-                  {DIRECTION_LABEL[o.direction] ?? o.direction} {pct(o.priceCents)}
+                  {DIRECTION_LABEL[o.direction]} · chance {pct(o.priceCents)}
                 </span>
-                <span className="text-ink/50">{STATUS_LABEL[o.status] ?? o.status}</span>
+                <span className="text-ink/50">{ORDER_STATUS_LABEL[o.status] ?? o.status}</span>
               </div>
               <p className="text-xs text-ink/50">
-                {fmtN(o.qty)} cotas · {fmtN(o.filledQty)} preenchidas · {o.type} · {timeAgo(o.createdAt)}
+                {fmtN(o.qty)} unidades · {fmtN(o.filledQty)} confirmadas · {ORDER_TYPE_LABEL[o.type] ?? o.type} · {timeAgo(o.createdAt)}
               </p>
             </div>
             <button

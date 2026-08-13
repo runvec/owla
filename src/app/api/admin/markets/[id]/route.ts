@@ -38,7 +38,7 @@ export async function PATCH(
 
   try {
     const existing = await prisma.market.findUnique({ where: { id }, select: { id: true } });
-    if (!existing) return NextResponse.json({ error: "Mercado não encontrado" }, { status: 404 });
+    if (!existing) return NextResponse.json({ error: "Pergunta não encontrada." }, { status: 404 });
 
     const data: Prisma.MarketUpdateInput = {};
     if (input.question !== undefined) data.question = input.question;
@@ -66,12 +66,12 @@ export async function DELETE(
 
   try {
     const existing = await prisma.market.findUnique({ where: { id }, select: { id: true } });
-    if (!existing) return NextResponse.json({ error: "Mercado não encontrado" }, { status: 404 });
+    if (!existing) return NextResponse.json({ error: "Pergunta não encontrada." }, { status: 404 });
 
     const tradeCount = await prisma.trade.count({ where: { marketId: id } });
     if (tradeCount > 0) {
       return NextResponse.json(
-        { error: "Mercado possui negociações; não é possível removê-lo" },
+        { error: "A pergunta possui palpites confirmados e não pode ser removida." },
         { status: 409 },
       );
     }

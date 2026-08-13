@@ -112,7 +112,7 @@ export default function PriceChart({
   return (
     <div className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-ink/70">Histórico de preços</h2>
+        <h2 className="text-sm font-semibold text-ink/70">Evolução da chance</h2>
         <div className="flex gap-1">
           {RANGES.map((r) => (
             <button
@@ -130,7 +130,7 @@ export default function PriceChart({
         </div>
       </div>
       {chartPoints.length === 0 ? (
-        <p className="flex h-64 items-center justify-center text-sm text-ink/50">Sem histórico de preços ainda.</p>
+        <p className="flex h-64 items-center justify-center text-sm text-ink/50">Ainda não há histórico de chance.</p>
       ) : (
         <div ref={containerRef} className="h-64 w-full" />
       )}

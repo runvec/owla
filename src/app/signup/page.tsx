@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { POINTS_DISCLAIMER } from "@/lib/product-language";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function SignupPage() {
     <div className="animate-fade-in mx-auto w-full max-w-sm rounded-xl border border-mist bg-white p-6 shadow-sm">
       <h1 className="mb-1 text-xl font-bold text-ink">Criar conta</h1>
       <p className="mb-6 text-xs text-ink/50">
-        Entretenimento com pontos — nada de dinheiro real.
+        {POINTS_DISCLAIMER}
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-3">

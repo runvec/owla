@@ -41,7 +41,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   const rl = await rateLimit(`proposal:${user.id}`, RATE_LIMITS.proposal.limit, RATE_LIMITS.proposal.windowMs);
   if (!rl.ok) {
     return NextResponse.json(
-      { error: "Muitas propostas em pouco tempo. Tente novamente mais tarde." },
+      { error: "Muitas sugestões em pouco tempo. Tente novamente mais tarde." },
       { status: 429, headers: { "Retry-After": String(Math.ceil((rl.retryAfterMs ?? 0) / 1000)) } },
     );
   }
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     const level = getUserLevel(userInfo.totalGranted);
     return NextResponse.json(
       {
-        error: `Você precisa de ${PROPOSAL_POINTS_REQUIREMENT} pontos concedidos ou atingir o nível ${PROPOSAL_LEVEL_REQUIREMENT} para propor mercados. Você tem ${userInfo.totalGranted} pontos (nível ${level}). Interaja com mercados e reivencione o bônus diário para desbloquear.`,
+        error: `Você precisa de ${PROPOSAL_POINTS_REQUIREMENT} pontos concedidos ou atingir o nível ${PROPOSAL_LEVEL_REQUIREMENT} para sugerir perguntas. Você tem ${userInfo.totalGranted} pontos (nível ${level}). Interaja com perguntas e receba os pontos diários para desbloquear.`,
         code: "INSUFFICIENT_LEVEL",
         required: {
           points: PROPOSAL_POINTS_REQUIREMENT,

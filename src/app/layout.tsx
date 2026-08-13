@@ -18,8 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Owla",
-  description:
-    "Owla — plataforma de entretenimento com mercados de previsão em pontos. Sem dinheiro real, só diversão.",
+  description: "Owla — perguntas sobre o futuro. Palpites com pontos gratuitos e virtuais.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

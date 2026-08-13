@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/session";
 import { resolveMarket } from "@/lib/resolve";
+import { publicEngineErrorMessage } from "@/lib/product-language";
 import type { ResolutionOutcome } from "@/lib/resolve";
 import { resolveInputSchema, unwrap } from "@/lib/validation";
 
@@ -42,6 +43,6 @@ export async function POST(
         : message.includes("não encontrado")
           ? 404
           : 400;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json({ error: publicEngineErrorMessage(message) }, { status });
   }
 }

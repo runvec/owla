@@ -26,16 +26,4 @@ export function timeAgo(input: Date | string): string {
   return date.toLocaleDateString("pt-BR");
 }
 
-export const ORDER_TYPE_LABEL: Record<string, string> = {
-  GTC: "GTC",
-  FAK: "FAK",
-  FOK: "FOK",
-};
-
-export const MARKET_STATUS_LABEL: Record<string, string> = {
-  OPEN: "Em aberto",
-  CLOSED: "Fechado",
-  RESOLVED_YES: "Resolvido (SIM)",
-  RESOLVED_NO: "Resolvido (NÃO)",
-  VOID: "Anulado",
-};
+export { ORDER_TYPE_LABEL, QUESTION_STATUS_LABEL as MARKET_STATUS_LABEL } from "@/lib/product-language";

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAuthUser } from "@/lib/session";
 import { cancelOrder } from "@/lib/engine";
+import { publicEngineErrorMessage } from "@/lib/product-language";
 
 const msg = (e: unknown) => (e instanceof Error ? e.message : "Erro interno");
 
@@ -19,6 +20,6 @@ export async function DELETE(
   } catch (e) {
     const message = msg(e);
     const status = message.includes("não encontrada") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json({ error: publicEngineErrorMessage(message) }, { status });
   }
 }

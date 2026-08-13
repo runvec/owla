@@ -91,7 +91,7 @@ export default function AdminEventForm({ categories, onCreated }: AdminEventForm
       return;
     }
     if (markets.some((m) => m.question.trim().length < 5)) {
-      setError("Cada mercado precisa de uma pergunta com pelo menos 5 caracteres.");
+      setError("Cada pergunta precisa ter pelo menos 5 caracteres.");
       return;
     }
 
@@ -212,13 +212,13 @@ export default function AdminEventForm({ categories, onCreated }: AdminEventForm
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-ink/80">Mercados</p>
+          <p className="text-sm font-medium text-ink/80">Perguntas</p>
           <button
             type="button"
             onClick={addMarket}
             className="rounded-lg border border-mist px-3 py-1.5 text-sm font-medium text-ink/70 hover:border-owla hover:text-owla"
           >
-            + Adicionar mercado
+            + Adicionar pergunta
           </button>
         </div>
 
@@ -228,7 +228,7 @@ export default function AdminEventForm({ categories, onCreated }: AdminEventForm
               <input
                 value={m.question}
                 onChange={(e) => setMarket(m.id, { question: e.target.value })}
-                placeholder="Pergunta de SIM/NÃO do mercado"
+                placeholder="Pergunta de A favor/Contra"
                 className={inputCls}
               />
               <button
@@ -236,7 +236,7 @@ export default function AdminEventForm({ categories, onCreated }: AdminEventForm
                 onClick={() => removeMarket(m.id)}
                 disabled={markets.length <= 1}
                 className="shrink-0 rounded-lg border border-mist px-3 py-2 text-sm text-ink/50 hover:border-owla hover:text-owla disabled:opacity-40"
-                title="Remover mercado"
+                title="Remover pergunta"
               >
                 ✕
               </button>

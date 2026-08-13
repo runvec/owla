@@ -5,7 +5,7 @@ import { getAuthUser } from "@/lib/session";
 import { eventInputSchema, marketInputSchema, unwrap } from "@/lib/validation";
 
 const createEventSchema = eventInputSchema.extend({
-  markets: z.array(marketInputSchema).min(1, "Adicione pelo menos um mercado").max(20),
+  markets: z.array(marketInputSchema).min(1, "Adicione pelo menos uma pergunta").max(20),
 });
 
 const msg = (e: unknown) => (e instanceof Error ? e.message : "Erro interno");

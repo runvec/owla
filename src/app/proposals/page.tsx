@@ -16,18 +16,18 @@ export default async function ProposalsPage() {
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink">Minhas propostas</h1>
-        <p className="text-sm text-ink/60">Acompanhe o status das suas sugestões de mercado.</p>
+        <h1 className="text-2xl font-bold text-ink">Minhas sugestões</h1>
+        <p className="text-sm text-ink/60">Acompanhe o status das suas sugestões de pergunta.</p>
       </div>
 
       {proposals.length === 0 ? (
         <div className="rounded-xl border border-mist bg-white p-10 text-center">
-          <p className="text-sm text-ink/60">Você ainda não enviou propostas.</p>
+          <p className="text-sm text-ink/60">Você ainda não enviou sugestões.</p>
           <Link
             href="/propose"
             className="mt-4 inline-block rounded-lg bg-owla px-4 py-2 text-sm font-semibold text-white hover:bg-owla-dark"
           >
-            Enviar minha primeira proposta
+            Enviar minha primeira sugestão
           </Link>
         </div>
       ) : (
@@ -58,7 +58,7 @@ export default async function ProposalsPage() {
                     href={`/market/${p.market.id}`}
                     className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-signal hover:text-signal/80"
                   >
-                    Ver mercado →
+                    Ver pergunta →
                   </Link>
                 ) : null}
 

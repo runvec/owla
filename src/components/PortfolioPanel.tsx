@@ -5,6 +5,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import type { PositionRow } from "@/lib/queries";
 import { fmtN, fmtPts, pct, timeAgo, MARKET_STATUS_LABEL } from "@/lib/format";
+import { SIDE_LABEL } from "@/lib/product-language";
 
 export interface HistoryRow {
   id: string;
@@ -45,7 +46,7 @@ interface PortfolioResponse {
 const fetcher = async (url: string) => {
   const res = await fetch(url);
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body.error || "Erro ao carregar carteira");
+  if (!res.ok) throw new Error(body.error || "Erro ao carregar seus palpites");
   return body;
 };
 
@@ -81,17 +82,17 @@ export default function PortfolioPanel({ initial }: { initial: PortfolioPayload 
   const history = data?.history ?? initial.history;
 
   const tabs = [
-    { id: "positions" as const, label: "Posições" },
+    { id: "positions" as const, label: "Palpites ativos" },
     { id: "history" as const, label: "Histórico" },
   ];
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {summaryCard("Saldo livre", fmtPts(user.balance), "zinc")}
-        {summaryCard("Em caução", fmtPts(user.escrow), "zinc")}
-        {summaryCard("Patrimônio líquido", fmtPts(user.netWorth), "zinc")}
-        {summaryCard("Lucro", fmtSigned(user.profit), user.profit < 0 ? "rose" : "emerald")}
+        {summaryCard("Disponíveis", fmtPts(user.balance), "zinc")}
+        {summaryCard("Reservados", fmtPts(user.escrow), "zinc")}
+        {summaryCard("Pontuação estimada", fmtPts(user.netWorth), "zinc")}
+        {summaryCard("Desempenho", fmtSigned(user.profit), user.profit < 0 ? "rose" : "emerald")}
       </div>
 
       <div className="rounded-xl border border-mist bg-white shadow-sm">
@@ -114,18 +115,18 @@ export default function PortfolioPanel({ initial }: { initial: PortfolioPayload 
 
         {tab === "positions" ? (
           positions.length === 0 ? (
-            <p className="p-6 text-sm text-ink/50">Sem posições abertas.</p>
+            <p className="p-6 text-sm text-ink/50">Nenhum palpite ativo.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-mist text-left text-xs uppercase tracking-wide text-ink/50">
-                    <th className="px-4 py-2 font-medium">Mercado</th>
-                    <th className="px-4 py-2 font-medium">Lado</th>
-                    <th className="px-4 py-2 text-right font-medium">Qtd</th>
-                    <th className="px-4 py-2 text-right font-medium">Custo médio</th>
-                    <th className="px-4 py-2 text-right font-medium">Preço</th>
-                    <th className="px-4 py-2 text-right font-medium">P&L não realizado</th>
+                    <th className="px-4 py-2 font-medium">Pergunta</th>
+                    <th className="px-4 py-2 font-medium">Escolha</th>
+                    <th className="px-4 py-2 text-right font-medium">Unidades</th>
+                    <th className="px-4 py-2 text-right font-medium">Chance média</th>
+                    <th className="px-4 py-2 text-right font-medium">Chance atual</th>
+                    <th className="px-4 py-2 text-right font-medium">Variação estimada</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,7 +151,7 @@ export default function PortfolioPanel({ initial }: { initial: PortfolioPayload 
                               : "bg-rose-50 text-rose-600"
                           }`}
                         >
-                          {p.side === "YES" ? "SIM" : "NÃO"}
+                          {SIDE_LABEL[p.side]}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right text-ink">{fmtN(p.qty)}</td>

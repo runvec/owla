@@ -13,7 +13,7 @@ export async function GET(
   const { id } = await params;
 
   const market = await getMarketWithEvent(id);
-  if (!market) return NextResponse.json({ error: "Mercado não encontrado" }, { status: 404 });
+  if (!market) return NextResponse.json({ error: "Pergunta não encontrada." }, { status: 404 });
 
   const rawRange = req.nextUrl.searchParams.get("range") ?? "d1";
   const range: Range = RANGES.includes(rawRange as Range) ? (rawRange as Range) : "d1";

@@ -65,9 +65,9 @@ const api = async (url: string, init?: RequestInit): Promise<ApiBody> => {
 
 const TAB_LABELS: { id: "resumo" | "propostas" | "criar" | "mercados"; label: string }[] = [
   { id: "resumo", label: "Resumo" },
-  { id: "propostas", label: "Propostas pendentes" },
+  { id: "propostas", label: "Sugestões pendentes" },
   { id: "criar", label: "Criar evento" },
-  { id: "mercados", label: "Mercados" },
+  { id: "mercados", label: "Perguntas" },
 ];
 
 const btnPrimary =
@@ -162,9 +162,9 @@ export default function AdminPanel({
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
           {[
             { label: "Eventos", value: initialStats.events },
-            { label: "Mercados", value: initialStats.markets },
+            { label: "Perguntas", value: initialStats.markets },
             { label: "Usuários", value: initialStats.users },
-            { label: "Trades", value: initialStats.trades },
+            { label: "Palpites confirmados", value: initialStats.trades },
             { label: "Pendentes", value: initialStats.pending },
           ].map((c) => (
             <div key={c.label} className="rounded-xl border border-mist bg-white p-4">
@@ -178,7 +178,7 @@ export default function AdminPanel({
       {tab === "propostas" &&
         (initialPending.length === 0 ? (
           <p className="rounded-xl border border-mist bg-white p-8 text-center text-sm text-ink/60">
-            Nenhuma proposta pendente.
+            Nenhuma sugestão pendente.
           </p>
         ) : (
           <ul className="space-y-3">
@@ -282,7 +282,7 @@ export default function AdminPanel({
         <div className="space-y-6">
           {groups.length === 0 ? (
             <p className="rounded-xl border border-mist bg-white p-8 text-center text-sm text-ink/60">
-              Nenhum mercado cadastrado.
+              Nenhuma pergunta cadastrada.
             </p>
           ) : (
             groups.map((g) => (
@@ -293,7 +293,7 @@ export default function AdminPanel({
                       {g.event.title}
                     </Link>
                     <span className="ml-2 text-xs font-normal text-ink/50">
-                      {g.event.category} · {fmtN(g.markets.length)} mercado(s)
+                      {g.event.category} · {fmtN(g.markets.length)} pergunta(s)
                     </span>
                   </h2>
                 </div>
@@ -314,7 +314,7 @@ export default function AdminPanel({
                               {m.question}
                             </Link>
                             <p className="mt-0.5 text-xs text-ink/50">
-                              Preço {pct(m.lastPrice)} · Volume {fmtN(m.volume)} pts
+                              Chance {pct(m.lastPrice)} · Participação {fmtN(m.volume)} pts
                             </p>
                           </div>
                           <span className={statusBadge(m.status)}>
@@ -336,7 +336,7 @@ export default function AdminPanel({
                               }
                               className={btnGhost}
                             >
-                              Fechar mercado
+                              Encerrar palpites
                             </button>
                           )}
 
@@ -355,7 +355,7 @@ export default function AdminPanel({
                                 }
                                 className={btnGhost}
                               >
-                                Reabrir
+                                Reabrir palpites
                               </button>
                               <div className="flex items-center gap-2">
                                 <select
@@ -368,15 +368,16 @@ export default function AdminPanel({
                                   }
                                   className="rounded-lg border border-mist bg-white px-2 py-1.5 text-xs text-ink focus:border-owla focus:outline-none"
                                 >
-                                  <option value="YES">SIM</option>
-                                  <option value="NO">NÃO</option>
+                                  <option value="YES">A favor</option>
+                                  <option value="NO">Contra</option>
                                   <option value="VOID">ANULAR</option>
                                 </select>
                                 <button
                                   type="button"
                                   disabled={busy}
                                   onClick={() => {
-                                    if (!window.confirm(`Resolver o mercado como ${outcome}?`)) return;
+                                    const label = outcome === "YES" ? "A favor" : outcome === "NO" ? "Contra" : "Anulada";
+                                    if (!window.confirm(`Definir o resultado da pergunta como ${label}?`)) return;
                                     void run(async () => {
                                       await api(`/api/admin/markets/${m.id}/resolve`, {
                                         method: "POST",
@@ -386,7 +387,7 @@ export default function AdminPanel({
                                   }}
                                   className={btnPrimary}
                                 >
-                                  Resolver
+                                  Definir resultado
                                 </button>
                               </div>
                             </>
@@ -396,7 +397,7 @@ export default function AdminPanel({
                             type="button"
                             disabled={busy}
                             onClick={() => {
-                              if (!window.confirm(`Excluir o mercado "${m.question}"?`)) return;
+                              if (!window.confirm(`Excluir a pergunta "${m.question}"?`)) return;
                               void run(async () => {
                                 await api(`/api/admin/markets/${m.id}`, { method: "DELETE" });
                               });

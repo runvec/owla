@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuthUser } from "@/lib/session";
 import { closeMarket, reopenMarket } from "@/lib/resolve";
+import { publicEngineErrorMessage } from "@/lib/product-language";
 import { unwrap } from "@/lib/validation";
 
 const actionSchema = z.object({
@@ -44,6 +45,6 @@ export async function POST(
   } catch (e) {
     const message = msg(e);
     const status = message.includes("não encontrado") ? 404 : 400;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json({ error: publicEngineErrorMessage(message) }, { status });
   }
 }

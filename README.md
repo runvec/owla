@@ -1,17 +1,17 @@
 # Owla
 
-Plataforma de **entretenimento com mercados de previsão** — os usuários apostam pontos (sem valor monetário) em eventos do mundo real (esportes, política, cripto, economia, entretenimento e tecnologia). É um jogo de opinião e estratégia, não uma plataforma de apostas com dinheiro real.
+**Perguntas sobre o futuro. Palpites com pontos.** A Owla é uma plataforma de entretenimento na qual pessoas usam pontos gratuitos e virtuais para se posicionar A favor ou Contra acontecimentos do mundo real. Os pontos não têm valor monetário, não podem ser comprados ou vendidos e nunca são convertidos em dinheiro, cripto, bens, descontos, créditos ou serviços.
 
 ## Funcionalidades
 
-- **Mercados de previsão** com livro de ofertas (order book) e gráfico de preços
-- **Motor de casamento de ordens (CLOB)** — compra/venda de tokens SIM/NÃO com preço-tempo
-- **Pontos sem valor monetário**: bônus de cadastro, bônus diário e níveis
-- **Propostas de novos mercados** pela comunidade, com aprovação de admin
-- **Portfólio** com posições, lucro/perda e histórico
-- **Leaderboard** de usuários
+- **Perguntas** com palpites A favor/Contra, painel de palpites em aberto e evolução da chance
+- **Combinação real entre participantes** preservada por um motor CLOB interno
+- **Pontos gratuitos e virtuais**: pontos de cadastro, pontos diários e níveis
+- **Sugestões de novas perguntas** pela comunidade, com aprovação de admin
+- **Meus palpites** com palpites ativos, desempenho e histórico
+- **Ranking** de desempenho e participação
 - **Comentários** em eventos
-- **Painel admin** para gerenciar eventos, mercados e propostas
+- **Painel admin** para gerenciar eventos, perguntas e sugestões
 
 ## Stack
 
@@ -134,4 +134,3 @@ test/              Testes (Vitest)
 ## Aviso
 
 Owla usa **pontos sem valor monetário** — é uma plataforma de entretenimento e não envolve apostas com dinheiro real. Consulte os [Termos de Uso](/terms).
-

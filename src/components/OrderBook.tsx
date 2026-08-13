@@ -33,8 +33,8 @@ export default function OrderBook({ book, selected, onSelect }: Props) {
   if (bids.length === 0 && asks.length === 0) {
     return (
       <div className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
-        <h2 className="mb-2 text-sm font-semibold text-ink/70">Livro de ofertas</h2>
-        <p className="text-sm text-ink/50">Livro vazio — seja o primeiro a oferecer.</p>
+        <h2 className="mb-2 text-sm font-semibold text-ink/70">Palpites em aberto</h2>
+        <p className="text-sm text-ink/50">Nenhum palpite pendente — seja a primeira pessoa.</p>
       </div>
     );
   }
@@ -67,26 +67,26 @@ export default function OrderBook({ book, selected, onSelect }: Props) {
   return (
     <div className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-ink/70">Livro de ofertas</h2>
-        <span className="text-xs text-ink/50">Clique num preço para usar no widget</span>
+        <h2 className="text-sm font-semibold text-ink/70">Palpites em aberto</h2>
+        <span className="text-xs text-ink/50">Escolha uma chance para usar no painel</span>
       </div>
       <div className="mb-1 grid grid-cols-[1fr_1fr] gap-2 px-1 text-[11px] text-ink/50">
-        <span>Comprar YES</span>
-        <span className="text-right">Vender YES</span>
+        <span>A favor</span>
+        <span className="text-right">Contra</span>
       </div>
       <div className="grid grid-cols-[1fr_1fr] gap-2">
         <div className="space-y-0.5">
           {bids.length > 0 ? (
             renderLines(bids, maxBid, "YES")
           ) : (
-            <p className="px-2 py-1 text-xs text-ink/40">Sem compras</p>
+            <p className="px-2 py-1 text-xs text-ink/40">Nenhum A favor</p>
           )}
         </div>
         <div className="space-y-0.5">
           {asks.length > 0 ? (
             renderLines(asks, maxAsk, "NO")
           ) : (
-            <p className="px-2 py-1 text-right text-xs text-ink/40">Sem ofertas de venda</p>
+            <p className="px-2 py-1 text-right text-xs text-ink/40">Nenhum Contra</p>
           )}
         </div>
       </div>

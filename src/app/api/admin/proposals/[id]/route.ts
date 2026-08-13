@@ -53,7 +53,7 @@ export async function POST(
 
   try {
     const proposal = await prisma.marketProposal.findUnique({ where: { id } });
-    if (!proposal) return NextResponse.json({ error: "Proposta não encontrada" }, { status: 404 });
+    if (!proposal) return NextResponse.json({ error: "Sugestão não encontrada." }, { status: 404 });
 
     if (input.action === "REJECT") {
       await prisma.marketProposal.update({
@@ -64,7 +64,7 @@ export async function POST(
     }
 
     if (proposal.status === "APPROVED") {
-      return NextResponse.json({ error: "Proposta já aprovada" }, { status: 409 });
+      return NextResponse.json({ error: "Sugestão já aprovada." }, { status: 409 });
     }
 
     const slug = await uniqueSlug(proposal.question);

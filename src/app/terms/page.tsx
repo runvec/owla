@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { POINTS_DISCLAIMER } from "@/lib/product-language";
 
 export const metadata = {
   title: "Termos de Uso — Owla",
@@ -8,11 +9,11 @@ export const metadata = {
 const sections = [
   {
     title: "1. Plataforma de entretenimento",
-    body: "A Owla é uma plataforma de entretenimento e não constitui aposta, jogo de azar ou serviço financeiro. O acesso é feito com pontos fictícios, sem qualquer valor pecuniário real.",
+    body: "A Owla é uma plataforma de entretenimento com perguntas sobre acontecimentos futuros e palpites feitos exclusivamente com pontos virtuais.",
   },
   {
     title: "2. Pontos sem valor",
-    body: "Os pontos não têm valor monetário e não podem ser comprados, vendidos, transferidos entre usuários ou convertidos em dinheiro, presentes, créditos ou qualquer outro ativo reparável.",
+    body: POINTS_DISCLAIMER,
   },
   {
     title: "3. Proibição de transações",
@@ -20,19 +21,19 @@ const sections = [
   },
   {
     title: "4. Pontuação por interação",
-    body: "Os pontos são ganhos exclusivamente por meio de interações dentro da plataforma, como bônus diários e recompensas de atividade. O histórico de pontuação é permanente e registrado por essas interações.",
+    body: "Os pontos são recebidos gratuitamente no cadastro, diariamente ou por ajustes administrativos. O histórico de pontuação registra as interações realizadas na plataforma.",
   },
   {
     title: "5. Administração da plataforma",
-    body: "Os administradores podem encerrar, ajustar ou suspender eventos, mercados e contas a qualquer momento, inclusive para corrigir erros, abusos ou comportamentos que violem estas regras.",
+    body: "Os administradores podem encerrar, ajustar ou suspender eventos, perguntas e contas, inclusive para corrigir erros, abusos ou comportamentos que violem estas regras.",
   },
   {
     title: "6. Sem garantia",
-    body: "A plataforma é fornecida no estado em que se encontra ('as is'), sem garantias de qualquer natureza. Os resultados de eventos e mercados não conferem qualquer direito real ou financeiro.",
+    body: "A plataforma é fornecida no estado em que se encontra ('as is'), sem garantias de disponibilidade ou exatidão. Resultados e pontos não conferem qualquer direito real ou financeiro.",
   },
   {
-    title: "7. Aviso legal (Lei brasileira)",
-    body: "Em conformidade com a legislação brasileira (Lei nº 1.506/1946 e disposições sobre contravenções de jogo), a Owla NÃO é uma aposta ou jogo de azar com dinheiro: não há pagamento de entrada, prêmio em dinheiro, valor monetário ou chance de lucro financeiro. Os únicos 'prêmios' são pontos simbólicos e a diversão.",
+    title: "7. Sem pagamentos ou prêmios",
+    body: "A Owla não cobra para conceder pontos e não oferece dinheiro, cripto, bens, descontos, créditos, serviços ou qualquer item resgatável como resultado dos palpites.",
   },
 ];
 

@@ -55,7 +55,7 @@ export default function EventCard({ event }: { event: EventCardItem }) {
 
         <div className="mt-auto space-y-2">
           <div className="flex items-baseline justify-between">
-            <span className="text-xs text-ink/50">SIM</span>
+            <span className="text-xs text-ink/50">A favor</span>
             <span className="num text-2xl font-bold text-signal">{pct(price)}</span>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-mist">
@@ -65,8 +65,8 @@ export default function EventCard({ event }: { event: EventCardItem }) {
             />
           </div>
           <div className="flex items-center justify-between text-xs text-ink/50">
-            <span>Vol: {fmtN(event.totalVolume)} pts</span>
-            {event.markets.length > 0 && <span>{event.markets.length} mercado(s)</span>}
+            <span>Participação: {fmtN(event.totalVolume)} pts</span>
+            {event.markets.length > 0 && <span>{event.markets.length} pergunta(s)</span>}
           </div>
         </div>
       </div>

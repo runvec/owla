@@ -47,14 +47,17 @@ export default function HomeFeed() {
   return (
     <div className="animate-fade-in space-y-5">
       <div className="flex flex-col gap-3">
-        <h1 className="text-2xl font-bold text-ink">Mercados</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-ink">Perguntas</h1>
+          <p className="text-sm text-ink/60">Perguntas sobre o futuro. Palpites com pontos.</p>
+        </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <input
             type="search"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Buscar mercados…"
+            placeholder="Buscar perguntas…"
             className="w-full rounded-lg border border-mist bg-white px-3 py-2 text-sm text-ink placeholder:text-ink/30 focus:border-owla focus:outline-none sm:max-w-xs"
           />
           <select
@@ -98,14 +101,14 @@ export default function HomeFeed() {
       </div>
 
       {isLoading && !data ? (
-        <p className="py-12 text-center text-sm text-ink/50">Carregando mercados…</p>
+        <p className="py-12 text-center text-sm text-ink/50">Carregando perguntas…</p>
       ) : error || data?.error ? (
         <p className="rounded-xl border border-rose-200 bg-rose-50 py-12 text-center text-sm text-rose-600">
-          Não foi possível carregar os mercados. Tente novamente em instantes.
+          Não foi possível carregar as perguntas. Tente novamente em instantes.
         </p>
       ) : events.length === 0 ? (
         <div className="rounded-xl border border-mist bg-white py-12 text-center">
-          <p className="text-sm text-ink/60">Nenhum mercado encontrado.</p>
+          <p className="text-sm text-ink/60">Nenhuma pergunta encontrada.</p>
           <p className="mt-1 text-xs text-ink/40">Tente ajustar a busca ou os filtros.</p>
           <button
             onClick={() => {

@@ -45,9 +45,9 @@ export default async function ProposePage() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-ink">Propor mercado</h1>
+        <h1 className="text-2xl font-bold text-ink">Sugerir pergunta</h1>
         <p className="mt-1 text-sm text-ink/60">
-          Sugira uma pergunta de SIM/NÃO. Um administrador revisa e publica se aprovada.
+          Sugira uma pergunta de A favor ou Contra. Um administrador revisa e publica se aprovada.
         </p>
       </div>
 
@@ -65,11 +65,11 @@ export default async function ProposePage() {
             <span className="float-right font-medium text-ink">{info.totalGranted.toLocaleString()}</span>
           </div>
           <div>
-            <span className="text-ink/50">Saldo atual</span>
+            <span className="text-ink/50">Pontos disponíveis</span>
             <span className="float-right font-medium text-ink">{info.balance.toLocaleString()}</span>
           </div>
           <div>
-            <span className="text-ink/50">Nível para liberar propostas</span>
+            <span className="text-ink/50">Nível para liberar sugestões</span>
             <span className="float-right font-medium text-signal">{PROPOSAL_LEVEL_REQUIREMENT}º</span>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default async function ProposePage() {
         <div className="mt-4 space-y-2">
           <div className="flex items-center justify-between text-xs text-ink/60">
             <span>
-              {PROPOSAL_POINTS_REQUIREMENT} pontos concedidos para propor
+              {PROPOSAL_POINTS_REQUIREMENT} pontos concedidos para sugerir
             </span>
             <span>{Math.round(pointsProgress * 100)}%</span>
           </div>

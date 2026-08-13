@@ -21,11 +21,11 @@ interface MePayload {
 }
 
 const NAV = [
-  { href: "/", label: "Mercados" },
-  { href: "/portfolio", label: "Carteira" },
+  { href: "/", label: "Perguntas" },
+  { href: "/portfolio", label: "Meus palpites" },
   { href: "/leaderboard", label: "Ranking" },
-  { href: "/propose", label: "Propor mercado" },
-  { href: "/proposals", label: "Minhas propostas" },
+  { href: "/propose", label: "Sugerir pergunta" },
+  { href: "/proposals", label: "Minhas sugestões" },
 ];
 
 export default function Header({ user }: { user: HeaderUser | null }) {
@@ -52,13 +52,13 @@ export default function Header({ user }: { user: HeaderUser | null }) {
       const res = await fetch("/api/bonus", { method: "POST" });
       const json = await res.json();
       if (!res.ok) {
-        setBonusMsg(json.error ?? "Não foi possível resgatar o bônus.");
+        setBonusMsg(json.error ?? "Não foi possível receber os pontos diários.");
         return;
       }
-      setBonusMsg(json.amount != null ? `+${json.amount} pts resgatados!` : "Bônus resgatado!");
+      setBonusMsg(json.amount != null ? `+${json.amount} pontos recebidos!` : "Pontos diários recebidos!");
       await mutate();
     } catch {
-      setBonusMsg("Erro de conexão ao resgatar o bônus.");
+      setBonusMsg("Erro de conexão ao receber os pontos diários.");
     } finally {
       setClaiming(false);
     }
@@ -91,7 +91,7 @@ export default function Header({ user }: { user: HeaderUser | null }) {
                   disabled={claiming}
                   className="rounded-full bg-signal px-3 py-1 text-xs font-medium text-white hover:bg-signal/90 disabled:opacity-50"
                 >
-                  {claiming ? "Resgatando…" : "Bônus diário 🎁"}
+                  {claiming ? "Recebendo…" : "Receber pontos diários"}
                 </button>
               )}
               <span className="hidden text-xs text-ink/60 md:inline">

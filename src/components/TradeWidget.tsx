@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { pct, fmtN, fmtPts } from "@/lib/format";
+import { DIRECTION_LABEL, ORDER_STATUS_MESSAGE, ORDER_TYPE_LABEL, POINTS_DISCLAIMER, SIDE_LABEL } from "@/lib/product-language";
 
 export interface BookLine {
   priceCents: number;
@@ -44,12 +45,7 @@ type OrderPayload = {
   type: "GTC" | "FAK";
 };
 
-const STATUS_TEXT: Record<string, string> = {
-  FILLED: "Ordem executada por completo.",
-  PARTIAL: "Ordem parcialmente executada.",
-  CANCELED: "Ordem não executada (FAK).",
-  OPEN: "Ordem em aberto no livro (GTC).",
-};
+const STATUS_TEXT = ORDER_STATUS_MESSAGE;
 
 function bestPrice(book: Book, side: "YES" | "NO"): number {
   if (side === "YES") {
@@ -86,18 +82,18 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
     setResult(null);
 
     if (!open) {
-      setError("Este mercado não está aberto para negociação.");
+      setError("Esta pergunta não está aceitando palpites.");
       return;
     }
 
     let payload: OrderPayload;
     if (mode === "simples") {
       if (!amountNum || amountNum <= 0) {
-        setError("Informe quantos pontos deseja investir.");
+        setError("Informe quantos pontos quer usar.");
         return;
       }
       if (previewQty <= 0) {
-        setError(`Valor insuficiente: a melhor oferta custa ${fmtPts(priceCents)} por cota.`);
+        setError(`Pontos insuficientes: são necessários ${fmtPts(priceCents)} por unidade.`);
         return;
       }
       payload = { marketId, side, direction: "BUY", priceCents, qty: previewQty, type: "FAK" };
@@ -105,7 +101,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
       const p = Number(priceStr);
       const q = Number(qtyStr);
       if (!Number.isInteger(p) || p < 1 || p > 99) {
-        setError("Preço deve ser um inteiro entre 1 e 99.");
+        setError("A chance deve ser um número inteiro entre 1 e 99.");
         return;
       }
       if (!Number.isInteger(q) || q < 1) {
@@ -129,7 +125,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
           return;
         }
         if (!res.ok) {
-          setError(json?.error ?? "Falha ao enviar a ordem.");
+          setError(json?.error ?? "Não foi possível enviar o palpite.");
           return;
         }
         setResult(json.result as OrderResult);
@@ -142,7 +138,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
   return (
     <div className="rounded-2xl border border-mist bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-ink/70">Negociar</h2>
+        <h2 className="text-sm font-semibold text-ink/70">Fazer palpite</h2>
         <div className="flex rounded-lg bg-mist p-0.5 text-xs">
           {(["simples", "avancado"] as const).map((m) => (
             <button
@@ -162,7 +158,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
 
       {!open && (
         <div className="mb-3 rounded-xl border border-market-amber/50 bg-market-amber/15 px-3 py-2 text-sm text-ink">
-          Negociação encerrada para este mercado.
+          Esta pergunta não está aceitando novos palpites.
         </div>
       )}
 
@@ -175,7 +171,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
               side === "YES" ? "bg-signal text-white" : "bg-mist text-ink/60 hover:text-ink"
             }`}
           >
-            {mode === "simples" ? "Comprar YES" : "YES"}
+            {SIDE_LABEL.YES}
           </button>
           <button
             onClick={() => setSide("NO")}
@@ -184,14 +180,14 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
               side === "NO" ? "bg-rose-500 text-white" : "bg-mist text-ink/60 hover:text-ink"
             }`}
           >
-            {mode === "simples" ? "Comprar NO" : "NO"}
+            {SIDE_LABEL.NO}
           </button>
         </div>
 
         {mode === "simples" ? (
           <>
             <div>
-              <label className="mb-1 block text-xs text-ink/50">Valor (pontos)</label>
+              <label className="mb-1 block text-xs text-ink/50">Quantos pontos?</label>
               <input
                 type="number"
                 min={1}
@@ -204,20 +200,20 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
               <span className="text-ink/50">
-                Preço: <strong className="text-ink">{pct(priceCents)}</strong>
+                Chance: <strong className="text-ink">{pct(priceCents)}</strong>
                 {selected?.side === side && selected.priceCents != null && (
                   <button
                     onClick={() => onSelect(null)}
                     className="ml-1 text-ink/50 hover:text-ink/80"
-                    title="Voltar para a melhor oferta"
+                    title="Voltar para a melhor chance"
                   >
-                    (do livro ✕)
+                    (dos palpites em aberto ✕)
                   </button>
                 )}
               </span>
               {amountNum > 0 && priceCents >= 1 && (
                 <span className="text-ink/50">
-                  ≈ {fmtN(previewQty)} cotas · {fmtPts(previewCost)}
+                  ≈ {fmtN(previewQty)} unidades · {fmtPts(previewCost)}
                 </span>
               )}
             </div>
@@ -232,7 +228,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
                   direction === "BUY" ? "bg-signal text-white" : "bg-mist text-ink/60 hover:text-ink"
                 }`}
               >
-                Comprar
+                {DIRECTION_LABEL.BUY}
               </button>
               <button
                 onClick={() => setDirection("SELL")}
@@ -241,12 +237,12 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
                   direction === "SELL" ? "bg-rose-500 text-white" : "bg-mist text-ink/60 hover:text-ink"
                 }`}
               >
-                Vender
+                {DIRECTION_LABEL.SELL}
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="mb-1 block text-xs text-ink/50">Preço (1–99)</label>
+                <label className="mb-1 block text-xs text-ink/50">Chance (1–99)</label>
                 <input
                   type="number"
                   min={1}
@@ -259,7 +255,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-ink/50">Quantidade</label>
+                <label className="mb-1 block text-xs text-ink/50">Unidades</label>
                 <input
                   type="number"
                   min={1}
@@ -280,7 +276,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
                     type === t ? "bg-owla text-white" : "bg-mist text-ink/60 hover:text-ink"
                   }`}
                 >
-                  {t}
+                  {ORDER_TYPE_LABEL[t]}
                 </button>
               ))}
             </div>
@@ -295,18 +291,18 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
           }`}
         >
           {busy
-            ? "Enviando..."
+            ? "Confirmando..."
             : mode === "simples"
-              ? `Comprar ${side} ${pct(priceCents)}`
-              : `${direction === "BUY" ? "Comprar" : "Vender"} ${side}`}
+              ? "Confirmar palpite"
+              : `${DIRECTION_LABEL[direction]} ${SIDE_LABEL[side]}`}
         </button>
 
         {result && (
           <div className="rounded-xl border border-signal/30 bg-signal/10 p-3 text-sm text-signal">
-            <p className="font-medium">{STATUS_TEXT[result.status] ?? "Ordem enviada."}</p>
+            <p className="font-medium">{STATUS_TEXT[result.status] ?? "Palpite enviado."}</p>
             <p className="mt-1 text-signal/80">
-              {fmtN(result.filledQty)} de {fmtN(result.filledQty + result.remainingQty)} cotas preenchidas
-              {result.averagePriceCents != null && ` · preço médio ${pct(result.averagePriceCents)}`}
+              {fmtN(result.filledQty)} de {fmtN(result.filledQty + result.remainingQty)} unidades confirmadas
+              {result.averagePriceCents != null && ` · chance média ${pct(result.averagePriceCents)}`}
             </p>
           </div>
         )}
@@ -325,6 +321,7 @@ export default function TradeWidget({ marketId, book, selected, onSelect, open, 
             )}
           </div>
         )}
+        <p className="text-[11px] leading-relaxed text-ink/40">{POINTS_DISCLAIMER}</p>
       </div>
     </div>
   );

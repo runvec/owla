@@ -42,7 +42,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
       <section className="space-y-2">
         <h2 className="text-sm font-medium text-ink/70">
-          Mercados ({event.markets.length})
+          Perguntas ({event.markets.length})
         </h2>
         <div className="space-y-2">
           {event.markets.map((m) => (
@@ -59,7 +59,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               </div>
               <div className="text-right">
                 <span className="num text-lg font-bold text-signal">{pct(m.lastPrice)}</span>
-                <p className="text-[10px] text-ink/50">SIM</p>
+                <p className="text-[10px] text-ink/50">A favor</p>
               </div>
             </Link>
           ))}

@@ -5,6 +5,7 @@ import { placeOrder } from "@/lib/engine";
 import { getOrderBook } from "@/lib/queries";
 import { orderInputSchema, unwrap } from "@/lib/validation";
 import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { publicEngineErrorMessage } from "@/lib/product-language";
 
 const msg = (e: unknown) => (e instanceof Error ? e.message : "Erro interno");
 
@@ -65,6 +66,6 @@ export async function POST(req: NextRequest): Promise<Response> {
       : message.includes("aberto") || message.includes("fechado")
         ? 409
         : 400;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json({ error: publicEngineErrorMessage(message) }, { status });
   }
 }

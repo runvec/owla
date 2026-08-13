@@ -57,7 +57,7 @@ export function proposalDisabledReason(totalGranted: number): string | null {
   return (
     `Você precisa de ${PROPOSAL_POINTS_REQUIREMENT} pontos concedidos ` +
     `ou atingir o nível ${PROPOSAL_LEVEL_REQUIREMENT} (você tem ${totalGranted} pontos e está no nível ${level}). ` +
-    `Interaja com alguns mercados e reivencione o bônus diário para desbloquear a criação de propostas.`
+    `Interaja com algumas perguntas e receba os pontos diários para desbloquear o envio de sugestões.`
   );
 }
 
